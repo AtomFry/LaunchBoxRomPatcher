@@ -1,0 +1,59 @@
+﻿<!-- NOTE - ManageRomPatchers window will pass in a ManageRomPatchersNavigationViewModel for DataContext -->
+<UserControl x:Class="LaunchBoxRomPatcher.UserInterface.UserControls.ManageRomPatchersNavigationViewUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LaunchBoxRomPatcher.UserInterface.UserControls" 
+             xmlns:viewmodels="clr-namespace:LaunchBoxRomPatcher.ViewModels" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:ManageRomPatchersNavigationViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="ListViewItem">
+                <Style.Triggers>
+                    <Trigger Property="ItemsControl.AlternationIndex"  Value="0">
+                        <Setter Property="Background" Value="#030504" />
+                    </Trigger>
+                    <Trigger Property="ItemsControl.AlternationIndex"  Value="1">
+                        <Setter Property="Background" Value="#241F1C" />
+                    </Trigger>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#5B5373"/>
+                    </Trigger>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Background" Value="#007701"/>
+                    </Trigger>
+                </Style.Triggers>
+                <Setter Property="Height" Value="40"/>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            </Style>
+        </Grid.Resources>
+        <ListView Name="NavigationListView"
+                  ItemsSource="{Binding RomPatchers}" 
+                  SelectedItem="{Binding SelectedRomPatcher,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                  AlternationCount="2">
+            <ListView.View>
+                <GridView>
+                    <GridView.ColumnHeaderContainerStyle>
+                        <Style TargetType="{x:Type GridViewColumnHeader}">
+                            <Setter Property="Background" Value="Black" />
+                            <Setter Property="Foreground" Value="WhiteSmoke" />
+                            <Setter Property="FontWeight" Value="Bold" />
+                            <Setter Property="Height" Value="40" />
+                            <Setter Property="HorizontalContentAlignment" Value="Left" />
+                        </Style>
+                    </GridView.ColumnHeaderContainerStyle>
+                    <GridViewColumn Header="Patcher" DisplayMemberBinding="{Binding RomPatcherName}" Width="{Binding ActualWidth, ElementName=NavigationListView }">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" Margin="5,0,5,0"/>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</UserControl>
