@@ -47,6 +47,8 @@ namespace LaunchBoxRomPatcher.ViewModels
         {
             await RomPatcherRepository.Instance.SaveRomPatcher(RomPatcher.Model);
 
+            HasChanges = await RomPatcherRepository.Instance.RomPatcherHasChanges(RomPatcher.Model);
+
             EventAggregatorHelper.Instance.EventAggregator
                 .GetEvent<RomPatcherSaved>()
                 .Publish(RomPatcher.Model);
@@ -55,10 +57,9 @@ namespace LaunchBoxRomPatcher.ViewModels
         // check if rom patcher is valid for saving
         private bool OnSaveCanExecute()
         {
-            // todo: check if RomPatcher has any changes - no need to save if nothing changed
-
             if (RomPatcher == null) return false;
             if (RomPatcher.HasErrors) return false;
+            if (!HasChanges) return false;
 
             return true;
         }
@@ -71,8 +72,14 @@ namespace LaunchBoxRomPatcher.ViewModels
 
             RomPatcher = new RomPatcherWrapper(romPatcher);
 
-            RomPatcher.PropertyChanged += (s, e) =>
+            HasChanges = false;
+
+            RomPatcher.PropertyChanged += async (s, e) =>
             {
+                if(!HasChanges)
+                {
+                    HasChanges = await RomPatcherRepository.Instance.RomPatcherHasChanges(RomPatcher.Model);
+                }
                 if (e.PropertyName == nameof(RomPatcher.HasErrors))
                 {
                     ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
@@ -90,6 +97,21 @@ namespace LaunchBoxRomPatcher.ViewModels
             {
                 _romPatcher = value;
                 OnPropertyChanged();
+            }
+        }
+
+        private bool _hasChanges;
+        public bool HasChanges
+        {
+            get { return _hasChanges; }
+            set
+            {
+                if (_hasChanges != value)
+                {
+                    _hasChanges = value;
+                    OnPropertyChanged();
+                    ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+                }
             }
         }
 

@@ -89,9 +89,6 @@ namespace LaunchBoxRomPatcher.DataAccess
 
         public async Task SaveRomPatcher(RomPatcher romPatcher)
         {
-            // backup the data file - already done in the write all async
-            // BackupDataFile();
-
             // read the data file 
             await GetAllAsync();
 
@@ -133,6 +130,18 @@ namespace LaunchBoxRomPatcher.DataAccess
                 ErrorMessage = ex.Message;
                 LogHelper.LogException(ex, $"InitializeData for {_dataFilePath ?? ""}");
             }
+        }
+
+        public async Task<bool> RomPatcherHasChanges(RomPatcher romPatcher)
+        {
+            await GetAllAsync();
+            RomPatcher originalRomPatcher = await GetByIdAsync(romPatcher.RomPatcherId);
+
+            if (originalRomPatcher.RomPatcherName != romPatcher.RomPatcherName) return true;
+            if (originalRomPatcher.RomPatcherFilePath != romPatcher.RomPatcherFilePath) return true;
+            if (originalRomPatcher.RomPatcherCommandLine != romPatcher.RomPatcherCommandLine) return true;
+
+            return false;
         }
 
         private void BackupDataFile()

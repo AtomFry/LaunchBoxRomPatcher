@@ -3,6 +3,7 @@ using LaunchBoxRomPatcher.UserInterface.Events;
 using System;
 using System.Drawing;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace LaunchBoxRomPatcher.ViewModels
 {
@@ -10,7 +11,7 @@ namespace LaunchBoxRomPatcher.ViewModels
     {
         private static readonly ManageRomPatchersViewModel instance = new ManageRomPatchersViewModel();
 
-        static ManageRomPatchersViewModel() 
+        static ManageRomPatchersViewModel()
         {
         }
 
@@ -23,6 +24,12 @@ namespace LaunchBoxRomPatcher.ViewModels
 
         private async void OnOpenRomPatcherView(string romPatcherId)
         {
+            var result = MessageDialogHelper.ShowOKCancelDialog("Discard unsaved changes?", "Question");
+            if(result == MessageDialogResult.OK)
+            {
+                return;
+            }
+
             await ManageRomPatchersDetailViewModel.LoadAsync(romPatcherId);
         }
 
