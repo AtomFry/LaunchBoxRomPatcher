@@ -3,9 +3,9 @@ using LaunchBoxRomPatcher.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Prism.Events;
 using LaunchBoxRomPatcher.Helpers;
 using LaunchBoxRomPatcher.UserInterface.Events;
+using System.Linq;
 
 namespace LaunchBoxRomPatcher.ViewModels
 {
@@ -22,13 +22,23 @@ namespace LaunchBoxRomPatcher.ViewModels
         }
 
         // explicit static constructor to tell C# compiler not to mark type as beforefieldinit
-        static ManageRomPatchersNavigationViewModel() 
+        static ManageRomPatchersNavigationViewModel()
         {
         }
         
         private ManageRomPatchersNavigationViewModel()
         {
-            RomPatchers = new ObservableCollection<RomPatcher>();
+            RomPatchers = new ObservableCollection<ManageRomPatchersNavigationItemViewModel>();
+
+            EventAggregatorHelper.Instance.EventAggregator
+                .GetEvent<RomPatcherSaved>()
+                .Subscribe(AfterRomPatcherSaved);
+        }
+
+        private void AfterRomPatcherSaved(RomPatcher savedRomPatcher)
+        {
+            ManageRomPatchersNavigationItemViewModel romPatcher = RomPatchers.Single(rp => rp.Id == savedRomPatcher.RomPatcherId);
+            romPatcher.DisplayMember = savedRomPatcher.RomPatcherName;
         }
 
         public async Task LoadAsync()
@@ -38,7 +48,7 @@ namespace LaunchBoxRomPatcher.ViewModels
             RomPatchers.Clear();
             foreach (RomPatcher item in lookup)
             {
-                RomPatchers.Add(item);
+                RomPatchers.Add(new ManageRomPatchersNavigationItemViewModel(item.RomPatcherId, item.RomPatcherName));
             }
 
             if(RomPatchers.Count != 0)
@@ -47,13 +57,14 @@ namespace LaunchBoxRomPatcher.ViewModels
             }
         }
 
-        public ObservableCollection<RomPatcher> RomPatchers { get; }
+        // public ObservableCollection<RomPatcher> RomPatchers { get; }
+        public ObservableCollection<ManageRomPatchersNavigationItemViewModel> RomPatchers { get; }
 
-        private RomPatcher selectedRomPatcher;
-        public RomPatcher SelectedRomPatcher
+        private ManageRomPatchersNavigationItemViewModel selectedRomPatcher;
+        public ManageRomPatchersNavigationItemViewModel SelectedRomPatcher
         {
             get { return selectedRomPatcher; }
-            set 
+            set
             {
                 if (selectedRomPatcher != value)
                 {
@@ -66,7 +77,7 @@ namespace LaunchBoxRomPatcher.ViewModels
                     {
                         EventAggregatorHelper.Instance.EventAggregator
                             .GetEvent<OpenRomPatcherEvent>()
-                            .Publish(selectedRomPatcher.RomPatcherId);
+                            .Publish(selectedRomPatcher.Id);
                     }
                 }
             }

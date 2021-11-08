@@ -45,7 +45,7 @@
                             <Setter Property="HorizontalContentAlignment" Value="Left" />
                         </Style>
                     </GridView.ColumnHeaderContainerStyle>
-                    <GridViewColumn Header="Patcher" DisplayMemberBinding="{Binding RomPatcherName}" Width="{Binding ActualWidth, ElementName=NavigationListView }">
+                    <GridViewColumn Header="Patcher" DisplayMemberBinding="{Binding DisplayMember}" Width="{Binding ActualWidth, ElementName=NavigationListView }">
                         <GridViewColumn.HeaderTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding}" Margin="5,0,5,0"/>

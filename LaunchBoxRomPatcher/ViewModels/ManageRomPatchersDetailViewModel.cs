@@ -1,11 +1,9 @@
 ﻿using LaunchBoxRomPatcher.DataAccess;
 using LaunchBoxRomPatcher.Helpers;
-using LaunchBoxRomPatcher.Models;
 using LaunchBoxRomPatcher.Models.ModelWrappers;
 using LaunchBoxRomPatcher.UserInterface.Events;
 using Microsoft.Win32;
 using Prism.Commands;
-using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -48,6 +46,10 @@ namespace LaunchBoxRomPatcher.ViewModels
         private async void OnSaveExecute()
         {
             await RomPatcherRepository.Instance.SaveRomPatcher(RomPatcher.Model);
+
+            EventAggregatorHelper.Instance.EventAggregator
+                .GetEvent<RomPatcherSaved>()
+                .Publish(RomPatcher.Model);
         }
 
         // check if rom patcher is valid for saving
