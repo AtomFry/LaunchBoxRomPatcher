@@ -24,10 +24,13 @@ namespace LaunchBoxRomPatcher.ViewModels
 
         private async void OnOpenRomPatcherView(string romPatcherId)
         {
-            var result = MessageDialogHelper.ShowOKCancelDialog("Discard unsaved changes?", "Question");
-            if(result == MessageDialogResult.OK)
+            if(ManageRomPatchersDetailViewModel?.HasChanges == true)
             {
-                return;
+                var result = MessageDialogHelper.ShowOKCancelDialog("Discard unsaved changes?", "Question");
+                if (result == MessageDialogResult.Cancel)
+                {
+                    return;
+                }
             }
 
             await ManageRomPatchersDetailViewModel.LoadAsync(romPatcherId);

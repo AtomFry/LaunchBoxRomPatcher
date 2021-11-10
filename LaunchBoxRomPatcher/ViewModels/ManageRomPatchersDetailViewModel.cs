@@ -80,6 +80,7 @@ namespace LaunchBoxRomPatcher.ViewModels
                 {
                     HasChanges = await RomPatcherRepository.Instance.RomPatcherHasChanges(RomPatcher.Model);
                 }
+
                 if (e.PropertyName == nameof(RomPatcher.HasErrors))
                 {
                     ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
