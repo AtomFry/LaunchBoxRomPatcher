@@ -1,5 +1,6 @@
 ﻿using LaunchBoxRomPatcher.DataAccess;
 using LaunchBoxRomPatcher.Helpers;
+using LaunchBoxRomPatcher.Models;
 using LaunchBoxRomPatcher.Models.ModelWrappers;
 using LaunchBoxRomPatcher.UserInterface.Events;
 using Microsoft.Win32;
@@ -68,7 +69,7 @@ namespace LaunchBoxRomPatcher.ViewModels
 
         public async Task LoadAsync(string romPatcherId)
         {
-            var romPatcher = await RomPatcherRepository.Instance.GetByIdAsync(romPatcherId);
+            RomPatcher romPatcher = await RomPatcherRepository.Instance.GetByIdAsync(romPatcherId);
 
             RomPatcher = new RomPatcherWrapper(romPatcher);
 
@@ -88,6 +89,7 @@ namespace LaunchBoxRomPatcher.ViewModels
             };
 
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)SelectFileCommand).RaiseCanExecuteChanged();
         }
         
         private RomPatcherWrapper _romPatcher;
