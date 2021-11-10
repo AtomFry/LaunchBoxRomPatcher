@@ -50,38 +50,10 @@ namespace LaunchBoxRomPatcher.ViewModels
             {
                 RomPatchers.Add(new ManageRomPatchersNavigationItemViewModel(item.RomPatcherId, item.RomPatcherName));
             }
-
-            if(RomPatchers.Count != 0)
-            {
-                SelectedRomPatcher = RomPatchers[0];
-            }
         }
 
         // public ObservableCollection<RomPatcher> RomPatchers { get; }
         public ObservableCollection<ManageRomPatchersNavigationItemViewModel> RomPatchers { get; }
-
-        private ManageRomPatchersNavigationItemViewModel selectedRomPatcher;
-        public ManageRomPatchersNavigationItemViewModel SelectedRomPatcher
-        {
-            get { return selectedRomPatcher; }
-            set
-            {
-                if (selectedRomPatcher != value)
-                {
-                    selectedRomPatcher = value;
-
-                    OnPropertyChanged();
-
-                    // publish event when selected rom patcher changes
-                    if(selectedRomPatcher != null)
-                    {
-                        EventAggregatorHelper.Instance.EventAggregator
-                            .GetEvent<OpenRomPatcherEvent>()
-                            .Publish(selectedRomPatcher.Id);
-                    }
-                }
-            }
-        }
 
         public string ErrorMessage 
         { 

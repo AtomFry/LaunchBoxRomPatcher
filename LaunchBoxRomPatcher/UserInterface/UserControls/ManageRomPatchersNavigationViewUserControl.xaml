@@ -30,30 +30,42 @@
                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             </Style>
         </Grid.Resources>
-        <ListView Name="NavigationListView"
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" 
+                      VerticalScrollBarVisibility="Auto">
+            <ItemsControl Name="NavigationListView"
                   ItemsSource="{Binding RomPatchers}" 
-                  SelectedItem="{Binding SelectedRomPatcher,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                   AlternationCount="2">
-            <ListView.View>
-                <GridView>
-                    <GridView.ColumnHeaderContainerStyle>
-                        <Style TargetType="{x:Type GridViewColumnHeader}">
-                            <Setter Property="Background" Value="Black" />
-                            <Setter Property="Foreground" Value="WhiteSmoke" />
-                            <Setter Property="FontWeight" Value="Bold" />
-                            <Setter Property="Height" Value="40" />
-                            <Setter Property="HorizontalContentAlignment" Value="Left" />
-                        </Style>
-                    </GridView.ColumnHeaderContainerStyle>
-                    <GridViewColumn Header="Patcher" DisplayMemberBinding="{Binding DisplayMember}" Width="{Binding ActualWidth, ElementName=NavigationListView }">
-                        <GridViewColumn.HeaderTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding}" Margin="5,0,5,0"/>
-                            </DataTemplate>
-                        </GridViewColumn.HeaderTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="ContentPresenter">
+                        <Setter Property="HorizontalAlignment" Value="Left"/>
+                        <Setter Property="Margin" Value="2"/>
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Content="{Binding DisplayMember}" 
+                                Command="{Binding OpenRomPatcherDetailViewCommand}">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Grid x:Name="buttongrid">
+                                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                    </Grid>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Cursor" Value="Hand"/>
+                                            <Setter Property="FontWeight" Value="Bold"/>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="True">
+                                            <Setter Property="FontWeight" Value="Normal"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
     </Grid>
 </UserControl>
